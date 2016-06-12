@@ -31,27 +31,43 @@ int main(int argc, char *argv[]) {
         perror("Fuck setting the slave address < 0");
         exit(1);
     }
-
-    //3ms window before programming
-    //usleep(3000);
-
     //send START_CM command
     buf[0] = 0xA0;
     buf[1] = 0x00;
     buf[2] = 0x00;
     while(write(file, buf, 3) != 3){
-        perror("Failed to write to i2c device ");
+        perror("Waiting....");
     }
 
+    //10ms window before programming
+    usleep(10000);
     if (read(file, buf, 1) != 1) {
         perror("Failed to read from the i2c bus");
     } else {
-        printf("status: %04x\n", buf[0] >> 6);
-        printf("diagnostic: %04x\n", (buf[0] >> 2) & 0x0f );
-        printf("response: %04x\n", (buf[0] ) & 0x03 );
+        printf("raw: 0x%02x\n", buf[0]);
+        printf("status: 0x%02x\n", buf[0] >> 6);
+        printf("diagnostic: 0x%02x\n", (buf[0] >> 2) & 0x0f );
+        printf("response: 0x%02x\n", (buf[0] ) & 0x03 );
 
     }
-    usleep(3000*100);//wait
+    if( (buf[0] & 0x03) == 0x01 ) { //response is good
+        //get EEPROM contents
+        buf[0] = 0x1c;
+        buf[1] = 0x00;
+        buf[2] = 0x00;
+        while(write(file, buf, 3) != 3){
+            perror("Failed to write to i2c device ");
+            exit(1);
+        }
+        //Perform data fetch
+        if (read(file, buf, 3) != 3) {
+            perror("Failed to read from the i2c bus");
+        }
+        else{
+            printf("Data Fetch Customer register: 0x%01x 0x%01x 0x%01x\n", buf[0], buf[1], buf[2]);
+            printf("Reported Address is: 0x%01x\n", (buf[2] & 0x7f));
+        }
+    }
     return 0;
 }
 

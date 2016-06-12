@@ -39,10 +39,10 @@ int main(int argc, char *argv[]) {
             perror("Initial wake up failed");
             exit(1);
         }
-        usleep(900000);
+        usleep(100);
         if (read(file, buf, 4) != 4) {
             perror("Failed to read from the i2c bus");
-        } else {
+        } else if(buf[0] >> 6 == 0) {
             printf("status: %d", buf[0] >> 6);
 
             printf("humidity: %f\t",
