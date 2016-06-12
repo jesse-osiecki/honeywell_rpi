@@ -1,0 +1,22 @@
+This C program will will change the base i2c address of a honeywell humidity sensor using a raspberry pi as a controller.
+
+Simply attach the grounds, the Vdd to GPIO4, and the i2c data to GPIO2 and the i2c clock to GPIO3 (as these latter two have pullups, you will not need resistors)
+
+This will make the device accessible to the i2c kernel interface on the pi (as those are special GPIO's), make sure to load the kernel module (i2c-dev)
+
+the addresses are hardcoded in the script for the moment
+
+To See what devices are hanging around on your i2c bus try:
+i2cdetect -y 1
+pi@raspberrypi:/mnt$ i2cdetect -y 1
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- 44 -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --                         
+
+
