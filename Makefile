@@ -6,7 +6,8 @@ CC = gcc
 CFLAGS  = -g -Wall
 
 # the build target executable:
-TARGET = honeywell_read
+#TARGET=honeywell_command
+TARGET=honeywell_read
 
 all: $(TARGET)
 

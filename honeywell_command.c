@@ -33,25 +33,25 @@ int main(int argc, char *argv[]) {
     }
 
     //3ms window before programming
-    for (;;) {
-    //empty transaction first
-    if(write(file, buf, 0) != 0){
-	perror("Initial wake up failed");
-        exit(1);
-    }
-    usleep(900000);
-        if (read(file, buf, 4) != 4) {
-            perror("Failed to read from the i2c bus");
-        } else {
-            printf("status: %d", buf[0] >> 6);
+    usleep(3000);
 
-            printf("humidity: %f\t",
-                    (float)( ( (unsigned int) ( (buf[0] & 0x3F ) << 8) | buf[1]) * 100 / (pow(2,14) - 1))
-                    );
-            printf("temperature: %f\n",
-                    (float) ((((((unsigned int) buf[2]) << 8) | buf[3]) >> 2) / 16382.0) * 165 - 40
-                    );
-        }
+    //send START_CM command
+    buf[0] = 0xA0;
+    buf[1] = 0x00;
+    buf[2] = 0x00;
+    while(write(file, buf, 3) != 3){
+        perror("Failed to write to i2c device ");
     }
+    
+if (read(file, buf, 1) != 1) {
+    perror("Failed to read from the i2c bus");
+} else {
+    printf("status: %04x\n", buf[0] >> 6);
+    printf("diagnostic: %04x\n", (buf[0] >> 2) & 0x0f );
+    printf("response: %04x\n", (buf[0] ) & 0x03 );
+
+}
+usleep(3000*100);//wait
+return 0;
 }
 
