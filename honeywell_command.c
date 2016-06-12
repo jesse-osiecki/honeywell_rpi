@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     }
 
     //10ms window before programming
-    usleep(10000);
+    //usleep(10000);
     if (read(file, buf, 1) != 1) {
         perror("Failed to read from the i2c bus");
     } else {
