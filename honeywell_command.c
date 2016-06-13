@@ -120,6 +120,13 @@ static int GPIOWrite(int pin, int value){
 	return(0);
 }
 
+static int toggle_gpio(){
+    if (-1 == GPIOWrite(POUT, LOW))
+        return(3);
+    usleep(1000);
+    if (-1 == GPIOWrite(POUT, HIGH))
+        return(3);
+}
 
 ////////////////
 //  main()
@@ -158,11 +165,7 @@ int main(int argc, char *argv[]) {
     /*
      * Toggle GPIO to reset the I2C device
      */
-    if (-1 == GPIOWrite(POUT, LOW))
-        return(3);
-    usleep(1000);
-    if (-1 == GPIOWrite(POUT, HIGH))
-        return(3);
+    toggle_gpio();
     //We now have 3ms to enter command mode
     //send START_CM command
     buf[0] = 0xA0;
@@ -227,6 +230,8 @@ int main(int argc, char *argv[]) {
         else{
             printf("Data Fetch Customer register: 0x%01x 0x%01x 0x%01x\n", buf[0], buf[1], buf[2]);
             printf("Reported Address is: 0x%01x\n", (buf[2] & 0x7f));
+            printf("Restarting device. Should now be at i2c address 0x%01x\n", (buf[2] & 0x7f));
+            toggle_gpio();
         }
     }
     return 0;
