@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
     char filename[20];
     int addr = 0x27; /* The I2C address can be as low as 00 or as high as 7f*/
     char buf[10];
-    int new_addr = 0x44;
+    int new_addr = 0x26;
 
 	/*
 	 * Enable GPIO pins
