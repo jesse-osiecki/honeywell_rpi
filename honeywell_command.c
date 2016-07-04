@@ -126,6 +126,7 @@ static int toggle_gpio(){
     usleep(1000);
     if (-1 == GPIOWrite(POUT, HIGH))
         return(3);
+    return(0);
 }
 
 ////////////////
