@@ -168,6 +168,7 @@ int main(int argc, char *argv[]) {
      */
     toggle_gpio();
 
+    usleep(1000000);
     //3ms window before programming
     for (;;) {
         //empty transaction first
@@ -179,7 +180,7 @@ int main(int argc, char *argv[]) {
         if (read(file, buf, 4) != 4) {
             perror("Failed to read from the i2c bus");
         } else if(buf[0] >> 6 == 0) {
-            printf("status: %d", buf[0] >> 6);
+            printf("status: %d\t", buf[0] >> 6);
 
             printf("humidity: %f\t",
                     (float)( ( (unsigned int) ( (buf[0] & 0x3F ) << 8) | buf[1]) * 100 / (pow(2,14) - 1))
